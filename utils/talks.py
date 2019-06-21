@@ -13,6 +13,7 @@ class Talk():
     name = ""
     author = ""
     images = []
+    big_images = []
     insert_time = ""
     li_id = ""
 
@@ -34,8 +35,8 @@ class Talk():
         '''
         @param cursor: pymysql's conn's cursor
         '''
-        sql_pattern = 'insert into logs(content, li_id, name, author, time, images, insert_time)\
-               values("{content}", "{li_id}", "{name}", "{author}", "{time}", "{images}", "{insert_time}")'
+        sql_pattern = 'insert into logs(content, li_id, name, author, time, images, insert_time, big_images)\
+               values("{content}", "{li_id}", "{name}", "{author}", "{time}", "{images}", "{insert_time}", "{big_images}")'
         # import pdb; pdb.set_trace()
         sql = sql_pattern.format(content=pymysql.escape_string(self._content),
                                  li_id=pymysql.escape_string(self.li_id),
@@ -43,7 +44,8 @@ class Talk():
                                  name=pymysql.escape_string(self.name),
                                  author=pymysql.escape_string(self.author),
                                  images=pymysql.escape_string(json.dumps(self.images)),
-                                 time=self.time)
+                                 time=self.time,
+                                 big_images=pymysql.escape_string(json.dumps(self.big_images)))
         logger.debug(sql)
         cursor.execute(sql)
 

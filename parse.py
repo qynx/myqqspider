@@ -36,7 +36,8 @@ def parse_one_log(self, li):
     info_html = self.get_content(li)
     # 
     images = li.xpath(".//a[@class='img-item  ']//img//@src")
-    import pdb; pdb.set_trace()
+    big_images = li.xpath(".//a[@class='img-item  ']//@href")
+    # import pdb; pdb.set_trace()
     
     # make up
     talk = Talk()
@@ -46,11 +47,11 @@ def parse_one_log(self, li):
     talk.images = images
     talk.time = pub_time
     talk.li_id = li_id
+    talk.big_images = big_images                                   
     talk.insert(self.db_conn.cursor())
     self.db_conn.commit()
     # #
 
-    logging.info("FOR  TEST get li's name %s" % name[0])
 
 def parse(self, html):
     logging.info("start find and parse log list")

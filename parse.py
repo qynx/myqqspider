@@ -53,6 +53,14 @@ def parse_one_log(self, li):
     # #
 
 
+def parse_ul(self, ul):
+    '''
+    parse lxml ul dom contains a list of log
+    '''
+    lis = ul.xpath(".//li[@class='f-single f-s-s']") 
+    for li in lis:
+        self.parse_one_log(li)
+
 def parse(self, html):
     logging.info("start find and parse log list")
     doc = fromstring(html)
@@ -61,3 +69,29 @@ def parse(self, html):
     lis = ul.xpath(".//li[@class='f-single f-s-s']") 
     for li in lis:
         self.parse_one_log(li)
+    self.page_down()
+    ul = self.get_new_ul()
+    self.parse_ul(ul)
+
+def page_down(self):
+    ''' 
+    page down to get old log
+    '''
+    js = "var q=document.documentElement.scrollTop=100000"  
+    self.browser.execute_script(js)
+    # wait for data to load
+    time.sleep(3)
+    expand_as = self.browser.find_elements_by_xpath('//a[@data-cmd="qz_toggle"]')  
+    for a in expand_as:
+        a.click()
+    time.sleep(3)
+    self.EXTRA_CURR_PAGE += 1
+
+def get_new_ul(self):
+    '''
+    after page down get the ul
+    '''
+    curr_page_source = self.browser.page_source
+    root = fromstring(curr_page_source)
+    ul = root.xpath('//ul[@data-page="%s"]' % self.EXTRA_CURR_PAGE)[0]
+    return ul

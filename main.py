@@ -2,7 +2,7 @@
 from redis import Redis
 from selenium import webdriver
 from login import getCookie
-from parse import parse, parse_one_log, get_content
+from parse import parse, parse_one_log, get_content, parse_ul, page_down, get_new_ul
 import time
 from utils.conns import connect_mysql, connect_redis
 import configparser
@@ -13,7 +13,8 @@ class Runner():
         self.browser = webdriver.Chrome()
         self.conf = configparser.ConfigParser()
         self.conf.read("my.ini", encoding="utf-8")
-        
+        self.EXTRA_CURR_PAGE = -1
+
     def run(self):
         cookies = self.getCookie(self.browser, self.conf.get("qq", "account"),
         self.conf.get("qq", "password"))
@@ -34,6 +35,9 @@ def load_method(self):
     self.parse = parse
     self.parse_one_log = parse_one_log
     self.get_content = get_content
+    self.parse_ul = parse_ul
+    self.page_down = page_down
+    self.get_new_ul = get_new_ul
 
 if __name__ == "__main__":
     load_method(Runner)

@@ -2,6 +2,8 @@ import json
 import datetime
 import logging
 import pymysql
+from xmlrpc.client import ServerProxy
+client = ServerProxy("http://127.0.0.1:9000")
 
 logger = logging.getLogger("main")
 
@@ -35,6 +37,15 @@ class Talk():
         '''
         @param cursor: pymysql's conn's cursor
         '''
+        data = "%s pub a log at %s:\n %s" % (self.name, self.time, self._content)
+        message = {"content": {"value": data,"color": "#FF0000"}}
+        try:
+            '''
+            send message for futher deal(optional)
+            '''
+            client.send_qq_log(json.dumps(message), str(self.name))
+        except Exception as e:
+            logging.exception(e)
         sql_pattern = 'insert into logs(content, li_id, name, author, time, images, insert_time, big_images)\
                values("{content}", "{li_id}", "{name}", "{author}", "{time}", "{images}", "{insert_time}", "{big_images}")'
         # import pdb; pdb.set_trace()
